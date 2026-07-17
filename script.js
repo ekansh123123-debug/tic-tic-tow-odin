@@ -1,6 +1,6 @@
 const allGameGrid = document.querySelectorAll(".gameGrid");
 const reset = document.querySelector("#reset");
-const upperBox = document.querySelector("#upperBox"); 
+const result = document.querySelector("#result"); 
 let gameBordState = ['','O','X','X','O','','','',''];
 
 const winningCombination = [
@@ -12,7 +12,10 @@ const winningCombination = [
 const gameWinAlert = (char) => {
     const winMassage = document.createElement("div");
     winMassage.textContent = `Player with ${char} has won 🫡`;
-    upperBox.appendChild(winMassage);
+    result.appendChild(winMassage);
+    allGameGrid.forEach((gameGrid) => {
+        gameGrid.removeEventListener("click",gameGridEvent)
+    })
 }
 
 const gameWinCheck = (board) => {
@@ -26,7 +29,7 @@ const gameWinCheck = (board) => {
     if(board.filter(String).length === 9) {
         const drawMassage = document.createElement("div");
         drawMassage.textContent = "The game was a draw . well played 👍";
-        upperBox.appendChild(drawMassage);
+        result.appendChild(drawMassage);
         return;
     }
     return;
@@ -54,10 +57,14 @@ const gameGridEvent = (e) => {
 }
 
 const resetEvent = () => {
+    result.textContent = '';
     allGameGrid.forEach((gameGrid) => {
         gameGrid.textContent = '';
     })
     gameBordState = ['','','','','','','','',''];
+    allGameGrid.forEach((gameGrid) => {
+    gameGrid.addEventListener("click",gameGridEvent);
+    });
 }
 
 reset.addEventListener('click',resetEvent);
