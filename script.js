@@ -1,10 +1,11 @@
-const grids = document.querySelectorAll(".gameGrid");
-const reset = document.querySelector("#reset");
-const result = document.querySelector("#result");
-const form = document.querySelector("#form");
-const closebtn = document.querySelector("#closebtn");
-let gameBordState = ['', '', '', '', '', '', '', '', ''];
-let player = {};
+let gameDetail = {
+    "gameBordState" : [],
+    'grids' : document.querySelectorAll(".gameGrid"),
+    'reset' : document.querySelector("#reset"),
+    'result' : document.querySelector("#result"),
+    'form' : document.querySelector("#form"),
+    'closebtn' : document.querySelector("#closebtn"),
+};
 
 const winningCombination = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8],  //row
@@ -13,12 +14,12 @@ const winningCombination = [
 ];
 
 const gameWinAlert = (winnerSymbol) => {
-    const name = (winnerSymbol === 'X') ? player.X || 'Player with X' : player.O || 'Player with O';
+    const name = (winnerSymbol === 'X') ? gameDetail.X || 'Player with X' : gameDetail.O || 'Player with O';
     const winMassage = document.createElement("div");
     winMassage.textContent = `${name} has won 🫡`;
 
-    result.appendChild(winMassage);
-    grids.forEach((gameGrid) => {
+    gameDetail.result.appendChild(winMassage);
+    gameDetail.grids.forEach((gameGrid) => {
         gameGrid.removeEventListener("click", gameGridEvent)
     })
 }
@@ -34,7 +35,7 @@ const gameWinCheck = (board) => {
     if (board.filter(String).length === 9) {
         const drawMassage = document.createElement("div");
         drawMassage.textContent = "The game was a draw . well played 👍";
-        result.appendChild(drawMassage);
+        gameDetail.result.appendChild(drawMassage);
         return;
     }
     return;
@@ -56,18 +57,18 @@ const gameGridEvent = (e) => {
     const currentGridChoise = changeTern();
     currentGrid.textContent = currentGridChoise;
     const index = parseInt(currentGrid.id);
-    gameBordState[index] = currentGridChoise;
-    gameWinCheck(gameBordState);
+    gameDetail.gameBordState[index] = currentGridChoise;
+    gameWinCheck(gameDetail.gameBordState);
 }
 
 const resetEvent = () => {
-    result.textContent = '';
-    player = {};
-    grids.forEach((gameGrid) => {
+    gameDetail.result.textContent = '';
+    gameDetail = {};
+    gameDetail.grids.forEach((gameGrid) => {
         gameGrid.textContent = '';
     })
-    gameBordState = ['', '', '', '', '', '', '', '', ''];
-    grids.forEach((gameGrid) => {
+    gameBordState = [];
+    gameDetail.grids.forEach((gameGrid) => {
         gameGrid.addEventListener("click", gameGridEvent);
     });
     dialog.showModal();
@@ -75,16 +76,16 @@ const resetEvent = () => {
 
 const formSubmitEvent = (e) => {
     e.preventDefault();
-    player.X =  document.querySelector('#playerWithX').value;
-    player.O =  document.querySelector('#playerWithO').value;
+    gameDetail.X =  document.querySelector('#playerWithX').value;
+    gameDetail.O =  document.querySelector('#playerWithO').value;
     dialog.close();
 }
 
-form.addEventListener("submit", formSubmitEvent);
-reset.addEventListener('click', resetEvent);
-closebtn.addEventListener("click", (e) => { e.preventDefault(); dialog.close(); })
+gameDetail.form.addEventListener("submit", formSubmitEvent);
+gameDetail.reset.addEventListener('click', resetEvent);
+gameDetail.closebtn.addEventListener("click", (e) => { e.preventDefault(); dialog.close(); })
 
-grids.forEach((gameGrid) => {
+gameDetail.grids.forEach((gameGrid) => {
     gameGrid.addEventListener("click", gameGridEvent);
 });
 
